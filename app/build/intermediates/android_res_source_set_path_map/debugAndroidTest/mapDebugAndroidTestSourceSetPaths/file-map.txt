@@ -1,6 +1,0 @@
-com.example.spyaware.test.app-tracing-1.2.0-0 /home/j3st3r/.gradle/caches/9.2.1/transforms/1cfe4399d226a6bdcbbd2e3a833d5611/transformed/tracing-1.2.0/res
-com.example.spyaware.test.app-core-1.7.0-1 /home/j3st3r/.gradle/caches/9.2.1/transforms/35c347981dd560149795ff5c8c76c048/transformed/core-1.7.0/res
-com.example.spyaware.test.app-updated_navigation_xml-2 /home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/build/generated/updated_navigation_xml/debugAndroidTest
-com.example.spyaware.test.app-packageDebugAndroidTestResources-3 /home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/build/intermediates/incremental/debugAndroidTest/packageDebugAndroidTestResources/merged.dir
-com.example.spyaware.test.app-packageDebugAndroidTestResources-4 /home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/build/intermediates/incremental/debugAndroidTest/packageDebugAndroidTestResources/stripped.dir
-com.example.spyaware.test.app-debugAndroidTest-5 /home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources
