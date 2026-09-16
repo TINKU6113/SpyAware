@@ -1,0 +1,170 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.spyaware"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="31"
+9        android:targetSdkVersion="36" />
+10
+11    <uses-permission android:name="android.permission.VIBRATE" />
+11-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:4:5-65
+11-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:4:22-63
+12    <uses-permission android:name="android.permission.BLUETOOTH" />
+12-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:5:5-67
+12-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:5:22-65
+13    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+13-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:6:5-73
+13-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:6:22-71
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:7:5-78
+14-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:7:22-76
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:8:5-80
+15-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:8:22-78
+16    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+16-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:9:5-72
+16-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:9:22-70
+17    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+17-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:10:5-75
+17-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:10:22-73
+18
+19    <uses-feature
+19-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:11:5-13:34
+20        android:name="android.hardware.bluetooth_le"
+20-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:12:9-53
+21        android:required="true" />
+21-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:13:9-32
+22
+23    <permission
+23-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:22:5-24:47
+24        android:name="com.example.spyaware.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+24-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:23:9-81
+25        android:protectionLevel="signature" />
+25-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:24:9-44
+26
+27    <uses-permission android:name="com.example.spyaware.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+27-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:26:5-97
+27-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:26:22-94
+28
+29    <application
+29-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:14:5-38:19
+30        android:allowBackup="true"
+30-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:15:9-35
+31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+31-->[androidx.core:core:1.18.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/e7596f7e068f8238338a1fb19379d759/transformed/core-1.18.0/AndroidManifest.xml:28:18-86
+32        android:dataExtractionRules="@xml/data_extraction_rules"
+32-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:16:9-65
+33        android:debuggable="true"
+34        android:extractNativeLibs="false"
+35        android:fullBackupContent="@xml/backup_rules"
+35-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:17:9-54
+36        android:icon="@mipmap/ic_launcher"
+36-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:18:9-43
+37        android:label="@string/app_name"
+37-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:19:9-41
+38        android:roundIcon="@mipmap/ic_launcher_round"
+38-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:20:9-54
+39        android:supportsRtl="true"
+39-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:21:9-35
+40        android:theme="@style/Theme.SpyAware" >
+40-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:22:9-46
+41        <activity
+41-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:23:9-25:40
+42            android:name="com.example.spyaware.activities.DeviceDetailsActivity"
+42-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:24:13-61
+43            android:exported="false" />
+43-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:25:13-37
+44        <activity
+44-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:26:9-34:20
+45            android:name="com.example.spyaware.activities.MainActivity"
+45-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:27:13-52
+46            android:exported="true" >
+46-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:28:13-36
+47            <intent-filter>
+47-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:29:13-33:29
+48                <action android:name="android.intent.action.MAIN" />
+48-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:30:17-69
+48-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:30:25-66
+49
+50                <category android:name="android.intent.category.LAUNCHER" />
+50-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:32:17-77
+50-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:32:27-74
+51            </intent-filter>
+52        </activity>
+53        <activity
+53-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:35:9-37:40
+54            android:name="com.example.spyaware.activities.KnownDevicesActivity"
+54-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:36:13-60
+55            android:exported="false" />
+55-->/home/j3st3r/Desktop/project/Spyaware BLE/SpyAware_fixed/SpyAware/app/src/main/AndroidManifest.xml:37:13-37
+56
+57        <provider
+57-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+58            android:name="androidx.startup.InitializationProvider"
+58-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+59            android:authorities="com.example.spyaware.androidx-startup"
+59-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+60            android:exported="false" >
+60-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+61            <meta-data
+61-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+62                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+62-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+63                android:value="androidx.startup" />
+63-->[androidx.emoji2:emoji2:1.3.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/c61e500a7a0623efa7323771a6a02e58/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+64            <meta-data
+64-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/j3st3r/.gradle/caches/9.2.1/transforms/9b584f18554ce9136e87e403accf7991/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+65                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+65-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/j3st3r/.gradle/caches/9.2.1/transforms/9b584f18554ce9136e87e403accf7991/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+66                android:value="androidx.startup" />
+66-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/j3st3r/.gradle/caches/9.2.1/transforms/9b584f18554ce9136e87e403accf7991/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+67            <meta-data
+67-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+68                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+68-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+69                android:value="androidx.startup" />
+69-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+70        </provider>
+71
+72        <receiver
+72-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+73            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+73-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+74            android:directBootAware="false"
+74-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+75            android:enabled="true"
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+76            android:exported="true"
+76-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+77            android:permission="android.permission.DUMP" >
+77-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+78            <intent-filter>
+78-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+79                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+79-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+79-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+80            </intent-filter>
+81            <intent-filter>
+81-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+82                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+83            </intent-filter>
+84            <intent-filter>
+84-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+85                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+86            </intent-filter>
+87            <intent-filter>
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+88                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/j3st3r/.gradle/caches/9.2.1/transforms/f4e8809b00020123c767a62783d2b08b/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+89            </intent-filter>
+90        </receiver>
+91    </application>
+92
+93</manifest>
