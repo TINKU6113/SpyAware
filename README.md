@@ -1,1 +1,3 @@
-hi this for demonstrating ci/cd pipeline
+# SpyAware
+
+Mobile surveillance detection and risk assessment platform.
