@@ -1,32 +1,84 @@
-# Gradle
-.gradle/
-build/
-*/build/
+# ==============================================================================
+# SpyAware Root .gitignore
+# ==============================================================================
 
-# Local Android SDK configuration
-local.properties
-
-# Android Studio
-.idea/
-*.iml
-
-# APK / App Bundle
-*.apk
-*.aab
-
-# Signing files
-*.jks
-*.keystore
-
-# Generated files
-*.class
-
-# OS files
+# OS & Editor files
 .DS_Store
 Thumbs.db
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
 
-# Kotlin
+# Build and Gradle caches
+build/
+*/build/
+*/*/build/
+.gradle/
+*/.gradle/
+*/*/.gradle/
 .kotlin/
+*/.kotlin/
 
-# Temporary files
+# Android Local Configuration (DO NOT COMMIT SECRETS OR LOCAL PATHS)
+local.properties
+*/local.properties
+*/*/local.properties
+
+# Android Keystores & Signing Keys
+*.jks
+*.keystore
+signing-key*
+*.p12
+
+# Python artifacts
+venv/
+*/venv/
+.venv/
+*/.venv/
+env/
+*/env/
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*/.pytest_cache/
+
+# Node / Web Frontend
+node_modules/
+*/node_modules/
+*/*/node_modules/
+dist/
+*/dist/
+*/*/dist/
+.vite/
+*/.vite/
+npm-debug.log*
+yarn-debug.log*
+
+# Generated Analysis Reports (generated dynamically at runtime)
+reports/*.json
+*/reports/*.json
+!reports/.gitkeep
+!*/reports/.gitkeep
+
+# Temporary / Log files
 *.log
+*.tmp
+temp/
+*/temp/
+
+# Ignore default APK outputs inside build/
+**/build/outputs/apk/
+*.aab
+
+# Explicitly allow designated module distribution APKs and fixtures
+!**/apk/*.apk
+!**/assets/modules/*.apk
+!**/samples/*.apk
+!**/samples/**/*.apk

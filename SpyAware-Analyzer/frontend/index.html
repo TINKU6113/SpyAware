@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpyAware Analyzer</title>
+    <script>
+      (function() {
+        // Resolve backend base URL from URL param, Android bridge, or localStorage
+        try {
+          const params = new URLSearchParams(window.location.search);
+          let backend = params.get('backend');
+          if (!backend && window.SpyAwareBridge && window.SpyAwareBridge.getBackendUrl) {
+            backend = window.SpyAwareBridge.getBackendUrl();
+          }
+          if (!backend) {
+            backend = localStorage.getItem('spyaware_backend_url');
+          }
+          if (backend) {
+            backend = backend.replace(/\/+$/, '');
+            window.__SPYAWARE_API_BASE__ = backend;
+            localStorage.setItem('spyaware_backend_url', backend);
+          }
+        } catch (e) {
+          console.warn('Backend URL resolution error:', e);
+        }
+
+        // Intercept fetch for /api routes to route to configured backend
+        const originalFetch = window.fetch;
+        window.fetch = function(input, init) {
+          let url = typeof input === 'string' ? input : (input && input.url ? input.url : String(input));
+          const apiBase = window.__SPYAWARE_API_BASE__;
+          if (apiBase && typeof url === 'string') {
+            if (url.startsWith('/api') || url.startsWith('/api/')) {
+              url = apiBase + (url.startsWith('/') ? url : '/' + url);
+              if (input instanceof Request) {
+                return originalFetch.call(this, new Request(url, input), init);
+              }
+              return originalFetch.call(this, url, init);
+            } else if (url.startsWith('https://appassets.androidplatform.net/api')) {
+              url = url.replace('https://appassets.androidplatform.net', apiBase);
+              if (input instanceof Request) {
+                return originalFetch.call(this, new Request(url, input), init);
+              }
+              return originalFetch.call(this, url, init);
+            } else if (url.startsWith('http://appassets.androidplatform.net/api')) {
+              url = url.replace('http://appassets.androidplatform.net', apiBase);
+              if (input instanceof Request) {
+                return originalFetch.call(this, new Request(url, input), init);
+              }
+              return originalFetch.call(this, url, init);
+            }
+          }
+          return originalFetch.call(this, input, init);
+        };
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">SpyAware Analyzer</string>
+    <string name="app_tagline">Android Covert Surveillance Analysis Platform</string>
+    <string name="settings_title">Backend Configuration</string>
+    <string name="backend_url_label">FastAPI Backend Server URL</string>
+    <string name="backend_url_hint">e.g. http://10.0.2.2:8000</string>
+    <string name="test_connection">Test Connection</string>
+    <string name="save_and_apply">Save &amp; Reload</string>
+    <string name="cancel">Cancel</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_checking">Checking…</string>
+    <string name="btn_retry">Retry Connection</string>
+    <string name="btn_configure">Configure Backend</string>
+    <string name="err_cannot_reach_backend">Backend server is unreachable</string>
+    <string name="err_backend_hint">Ensure FastAPI is running and reachable from this Android device.</string>
+    <string name="critical_risk_dialog_title">Critical Security Risk Detected</string>
+    <string name="critical_risk_dialog_message">SpyAware has classified this application as CRITICAL risk based on the analysis findings. This may indicate potentially dangerous behaviour. Would you like to uninstall this application?</string>
+    <string name="btn_uninstall">UNINSTALL</string>
+    <string name="btn_cancel_dialog">CANCEL</string>
+    <string name="uninstall_err_not_installed">Application \'%1$s\' is no longer installed on this device.</string>
+    <string name="uninstall_err_cannot_launch">Unable to open system uninstall confirmation: %1$s</string>
+    <string name="msg_app_uninstalled">Application \'%1$s\' was uninstalled.</string>
+</resources>
