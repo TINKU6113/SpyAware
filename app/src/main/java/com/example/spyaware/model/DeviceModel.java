@@ -2,6 +2,7 @@ package com.example.spyaware.model;
 import java.util.ArrayList;
 import com.example.spyaware.security.RiskEngine;
 import java.util.List;
+import java.util.Collections;
 public class DeviceModel {
 
     private String deviceName;
@@ -52,8 +53,14 @@ public class DeviceModel {
     private String riskLevel = RiskEngine.LOW;
 
     // RSSI history
+    private static final int MAX_RSSI_HISTORY = 1000;
     private final List<Integer> rssiHistory = new ArrayList<>();
     private final List<Long> rssiTimestamps = new ArrayList<>();
+    private final List<ObservationSession> completedSessions = new ArrayList<>();
+    private final List<TargetLocationPoint> targetLocationHistory =
+            new ArrayList<>();
+
+    private static final int MAX_TARGET_LOCATION_HISTORY = 200;
 
     // Advertisement timing
     private long lastObservationTime = 0;
@@ -102,6 +109,7 @@ public class DeviceModel {
         this.txPower = Integer.MIN_VALUE;
         addRssiObservation(rssi, System.currentTimeMillis());
         updateEstimatedDistance();
+
     }
 
     public String getDeviceName() {
@@ -114,6 +122,14 @@ public class DeviceModel {
 
     public int getRssi() {
         return rssi;
+    }
+    public int getLatestRssi() {
+
+        if (rssiHistory.isEmpty()) {
+            return rssi;
+        }
+
+        return rssiHistory.get(rssiHistory.size() - 1);
     }
 
     public String getFirstSeen() {
@@ -213,8 +229,8 @@ public class DeviceModel {
     }
     public void addRssiObservation(int rssi, long timestamp) {
 
-        // Keep only the latest 50 RSSI observations
-        if (rssiHistory.size() >= 50) {
+        // Keep up to MAX_RSSI_HISTORY observations
+        if (rssiHistory.size() >= MAX_RSSI_HISTORY) {
             rssiHistory.remove(0);
             rssiTimestamps.remove(0);
         }
@@ -523,6 +539,13 @@ public class DeviceModel {
             totalPresenceTime +=
                     currentSessionLastSeen - currentSessionStart;
 
+            completedSessions.add(
+                    new ObservationSession(
+                            currentSessionStart,
+                            currentSessionLastSeen
+                    )
+            );
+
             currentlyPresent = false;
         }
     }
@@ -773,6 +796,39 @@ public class DeviceModel {
     public boolean isCalibrated() {
         return calibrated;
     }
+    public void recordTargetLocation(
+            double latitude,
+            double longitude,
+            long timestamp
+    ) {
+        double distance = getEstimatedDistance();
+
+        if (distance < 0) {
+            return;
+        }
+
+        TargetLocationPoint point =
+                new TargetLocationPoint(
+                        timestamp,
+                        latitude,
+                        longitude,
+                        distance,
+                        getLatestRssi(),
+                        getRssiTrend(),
+                        getDistanceConfidence()
+                );
+
+        targetLocationHistory.add(point);
+
+        if (targetLocationHistory.size()
+                > MAX_TARGET_LOCATION_HISTORY) {
+
+            targetLocationHistory.remove(0);
+        }
+    }
+    public List<TargetLocationPoint> getTargetLocationHistory() {
+        return Collections.unmodifiableList(targetLocationHistory);
+    }
     public void setCalibrationRssi(int rssi) {
 
         this.calibrationRssi = rssi;
@@ -837,6 +893,60 @@ public class DeviceModel {
         this.riskScore = score;
 
         this.riskLevel = level;
+    }
+
+    public long getFirstSeenTimestamp() {
+        return firstSeenTimestamp;
+    }
+
+    public void setFirstSeenTimestamp(long firstSeenTimestamp) {
+        this.firstSeenTimestamp = firstSeenTimestamp;
+    }
+
+    public long getLastSeenTimestamp() {
+        return lastSeenTimestamp;
+    }
+
+    public void setLastSeenTimestamp(long lastSeenTimestamp) {
+        this.lastSeenTimestamp = lastSeenTimestamp;
+    }
+
+    public List<Long> getRssiTimestamps() {
+        return Collections.unmodifiableList(rssiTimestamps);
+    }
+
+    public List<ObservationSession> getCompletedSessions() {
+        return Collections.unmodifiableList(completedSessions);
+    }
+
+    public List<ObservationSession> getAllSessions() {
+        List<ObservationSession> all = new ArrayList<>(completedSessions);
+        if (currentlyPresent && currentSessionStart > 0) {
+            all.add(new ObservationSession(currentSessionStart, currentSessionLastSeen));
+        }
+        return Collections.unmodifiableList(all);
+    }
+
+    public static class ObservationSession {
+        private final long startTime;
+        private final long endTime;
+
+        public ObservationSession(long startTime, long endTime) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+        }
+
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public long getEndTime() {
+            return endTime;
+        }
+
+        public long getDurationMs() {
+            return Math.max(0, endTime - startTime);
+        }
     }
 
 }

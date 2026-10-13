@@ -19,9 +19,15 @@ public class DeviceAdapter
     public interface OnDeviceClickListener {
         void onDeviceClick(DeviceModel device);
     }
-    private List<DeviceModel> deviceList;
 
+    public interface OnDeviceActionListener {
+        void onViewDetails(DeviceModel device);
+        void onGenerateReport(DeviceModel device);
+    }
+
+    private List<DeviceModel> deviceList;
     private OnDeviceClickListener listener;
+    private OnDeviceActionListener actionListener;
 
     public DeviceAdapter(
             List<DeviceModel> deviceList,
@@ -29,6 +35,18 @@ public class DeviceAdapter
 
         this.deviceList = deviceList;
         this.listener = listener;
+    }
+
+    public DeviceAdapter(
+            List<DeviceModel> deviceList,
+            OnDeviceActionListener actionListener) {
+
+        this.deviceList = deviceList;
+        this.actionListener = actionListener;
+    }
+
+    public void setOnDeviceActionListener(OnDeviceActionListener actionListener) {
+        this.actionListener = actionListener;
     }
 
     @NonNull
@@ -260,13 +278,30 @@ public class DeviceAdapter
                         + "/100"
         );
         holder.itemView.setOnClickListener(v -> {
+            if (actionListener != null) {
+                actionListener.onViewDetails(device);
+            } else if (listener != null) {
+                listener.onDeviceClick(device);
+            }
+        });
 
-                    if (listener != null) {
-                        listener.onDeviceClick(device);
-                    }
-
+        if (holder.btnViewDetails != null) {
+            holder.btnViewDetails.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onViewDetails(device);
+                } else if (listener != null) {
+                    listener.onDeviceClick(device);
                 }
-        );
+            });
+        }
+
+        if (holder.btnGenerateReport != null) {
+            holder.btnGenerateReport.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onGenerateReport(device);
+                }
+            });
+        }
     }
 
     private String formatTxPower(int txPower) {
@@ -292,6 +327,8 @@ public class DeviceAdapter
         TextView tvLastSeen;
         View deviceCard;
         TextView tvRisk;
+        android.widget.Button btnViewDetails;
+        android.widget.Button btnGenerateReport;
 
         public DeviceViewHolder(
                 @NonNull View itemView) {
@@ -315,6 +352,12 @@ public class DeviceAdapter
 
             deviceCard =
                     itemView.findViewById(R.id.deviceCard);
+
+            btnViewDetails =
+                    itemView.findViewById(R.id.btnViewDetails);
+
+            btnGenerateReport =
+                    itemView.findViewById(R.id.btnGenerateReport);
         }
     }
 }

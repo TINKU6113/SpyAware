@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,8 @@ public class DeviceDetailsActivity extends AppCompatActivity {
     private TextView tvAnalysisTrend;
 
     private Button btnCalibrate;
+    private Button btnTrackMap;
+    private Button btnGenerateReport;
 
     private DeviceModel device;
 
@@ -93,6 +96,8 @@ public class DeviceDetailsActivity extends AppCompatActivity {
 
         btnCalibrate =
                 findViewById(R.id.btnCalibrate);
+        btnTrackMap = findViewById(R.id.btnTrackMap);
+        btnGenerateReport = findViewById(R.id.btnGenerateReport);
 
 
         // --------------------------------
@@ -203,7 +208,54 @@ public class DeviceDetailsActivity extends AppCompatActivity {
 
             startCalibration();
         });
+        btnTrackMap.setOnClickListener(v -> {
+
+            if (device == null) {
+                Toast.makeText(
+                        DeviceDetailsActivity.this,
+                        "Device information unavailable",
+                        Toast.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            Intent intent = new Intent(
+                    DeviceDetailsActivity.this,
+                    PotentialHarmfulActivity.class
+            );
+
+            intent.putExtra(
+                    "deviceIdentifier",
+                    device.getMacAddress()
+            );
+
+            startActivity(intent);
+        });
+
+        btnGenerateReport.setOnClickListener(v -> {
+            if (device == null) {
+                Toast.makeText(
+                        DeviceDetailsActivity.this,
+                        "Device information unavailable",
+                        Toast.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            Intent intent = new Intent(
+                    DeviceDetailsActivity.this,
+                    DeviceReportActivity.class
+            );
+
+            intent.putExtra(
+                    "deviceIdentifier",
+                    device.getMacAddress()
+            );
+
+            startActivity(intent);
+        });
     }
+
 
 
     // ============================================================

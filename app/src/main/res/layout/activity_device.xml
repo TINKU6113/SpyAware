@@ -85,5 +85,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="CALIBRATE AT 1 METRE" />
+    <Button
+        android:id="@+id/btnTrackMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="TRACK ON MAP" />
+    <Button
+        android:id="@+id/btnGenerateReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#0284C7"
+        android:textColor="#FFFFFF"
+        android:text="GENERATE INVESTIGATION REPORT" />
 
 </LinearLayout>

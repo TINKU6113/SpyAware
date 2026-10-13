@@ -25,6 +25,7 @@ import android.os.ParcelUuid;
 import android.util.SparseArray;
 import android.widget.Button;
 import android.widget.Toast;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spyaware.R;
 import com.example.spyaware.adapter.DeviceAdapter;
 import com.example.spyaware.model.DeviceModel;
-
+import com.example.spyaware.security.RiskEngine;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -46,6 +47,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import android.location.Location;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.example.spyaware.model.UserLocationPoint;
+import com.google.android.gms.location.Priority;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,9 +68,51 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStopScan;
     private Button btnRegisterKnown;
     private RecyclerView recyclerDevices;
+    private RecyclerView recyclerTargets;
 
+    private com.google.android.material.tabs.TabLayout deviceTabs;
+
+    private android.widget.FrameLayout nearbyContainer;
+    private android.widget.FrameLayout targetContainer;
+
+    private com.google.android.material.tabs.TabLayout targetTabs;
+
+    private android.widget.FrameLayout targetListContainer;
+    private android.widget.FrameLayout targetMapContainer;
+
+    private android.widget.TextView tvNoTargets;
+
+    private DeviceAdapter targetAdapter;
+
+    private List<DeviceModel> potentialTargetList;
     private DeviceAdapter adapter;
     public static List<DeviceModel> deviceList;
+    // ============================================================
+// USER LOCATION TRACKING
+// ============================================================
+
+    private FusedLocationProviderClient fusedLocationClient;
+
+    private LocationCallback locationCallback;
+
+    private Location latestUserLocation;
+    private static final long TARGET_LOCATION_RECORD_INTERVAL_MS = 2000;
+
+    private final java.util.Map<String, Long>
+            targetLocationRecordTimes =
+            new java.util.HashMap<>();
+
+    private boolean locationTrackingStarted = false;
+    public static final List<UserLocationPoint>
+            userLocationHistory =
+            new ArrayList<>();
+
+    private static final int MAX_USER_LOCATION_HISTORY = 2000;
+
+    private long lastUserLocationRecordTime = 0;
+
+    private static final long
+            USER_LOCATION_RECORD_INTERVAL_MS = 2000;
 
     private AlertEngine alertEngine;
     private BluetoothAdapter bluetoothAdapter;
@@ -323,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        fusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(this);
         alertEngine = new AlertEngine();
         knownDeviceRegistry =
                 KnownDeviceRegistry.getInstance();
@@ -343,44 +398,194 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerDevices =
                 findViewById(R.id.recyclerDevices);
+        recyclerTargets =
+                findViewById(R.id.recyclerTargets);
 
+        deviceTabs =
+                findViewById(R.id.deviceTabs);
 
+        nearbyContainer =
+                findViewById(R.id.nearbyContainer);
+
+        targetContainer =
+                findViewById(R.id.targetContainer);
+
+        tvNoTargets =
+                findViewById(R.id.tvNoTargets);
+
+        targetTabs =
+                findViewById(R.id.targetTabs);
+
+        targetListContainer =
+                findViewById(R.id.targetListContainer);
+
+        targetMapContainer =
+                findViewById(R.id.targetMapContainer);
+
+        deviceTabs.addOnTabSelectedListener(
+                new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
+
+                    @Override
+                    public void onTabSelected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+
+                        if (tab.getPosition() == 0) {
+
+                            // ============================================
+                            // NEARBY BLE DEVICES
+                            // ============================================
+
+                            nearbyContainer.setVisibility(
+                                    View.VISIBLE
+                            );
+
+                            targetContainer.setVisibility(
+                                    View.GONE
+                            );
+
+                        } else {
+
+                            // ============================================
+                            // POTENTIAL TARGETS
+                            // ============================================
+
+                            nearbyContainer.setVisibility(
+                                    View.GONE
+                            );
+
+                            targetContainer.setVisibility(
+                                    View.VISIBLE
+                            );
+
+                            updatePotentialTargets();
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+                        // Nothing needed
+                    }
+
+                    @Override
+                    public void onTabReselected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+                        // Nothing needed
+                    }
+                }
+        );
+        // =========================================================
+// POTENTIAL TARGET INNER TABS
+// =========================================================
+
+        targetTabs.addOnTabSelectedListener(
+                new com.google.android.material.tabs.TabLayout
+                        .OnTabSelectedListener() {
+
+                    @Override
+                    public void onTabSelected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+
+                        if (tab.getPosition() == 0) {
+
+                            // -----------------------------------------
+                            // TARGET LIST
+                            // -----------------------------------------
+
+                            targetListContainer.setVisibility(
+                                    View.VISIBLE
+                            );
+
+                            targetMapContainer.setVisibility(
+                                    View.GONE
+                            );
+
+                        } else {
+
+                            // -----------------------------------------
+                            // TARGET MAP
+                            // -----------------------------------------
+
+                            targetListContainer.setVisibility(
+                                    View.GONE
+                            );
+
+                            targetMapContainer.setVisibility(
+                                    View.VISIBLE
+                            );
+
+                            openPotentialTargetsMap();
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+                    }
+
+                    @Override
+                    public void onTabReselected(
+                            com.google.android.material.tabs.TabLayout.Tab tab) {
+
+                        if (tab.getPosition() == 1) {
+
+                            openPotentialTargetsMap();
+                        }
+                    }
+                }
+        );
         // -----------------------------------------------------
         // Device List
         // -----------------------------------------------------
 
         deviceList =
                 new ArrayList<>();
+        potentialTargetList =
+                new ArrayList<>();
+
+        BleDeviceRegistry.loadFromStorage(this);
+        if (!BleDeviceRegistry.getDevices().isEmpty()) {
+            deviceList.addAll(BleDeviceRegistry.getDevices().values());
+        }
 
         adapter =
                 new DeviceAdapter(
                         deviceList,
-                        device -> {
+                        new DeviceAdapter.OnDeviceActionListener() {
+                            @Override
+                            public void onViewDetails(DeviceModel device) {
+                                openDeviceDetails(device);
+                            }
 
-                            // Remember selected device
-                            selectedDevice = device;
-
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    "Selected: " +
-                                            device.getDeviceName(),
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            Intent intent =
-                                    new Intent(
-                                            MainActivity.this,
-                                            DeviceDetailsActivity.class
-                                    );
-
-                            intent.putExtra(
-                                    "deviceIdentifier",
-                                    device.getMacAddress()
-                            );
-
-                            startActivity(intent);
+                            @Override
+                            public void onGenerateReport(DeviceModel device) {
+                                openDeviceReport(device);
+                            }
                         }
                 );
+        targetAdapter =
+                new DeviceAdapter(
+                        potentialTargetList,
+                        new DeviceAdapter.OnDeviceActionListener() {
+                            @Override
+                            public void onViewDetails(DeviceModel device) {
+                                openDeviceDetails(device);
+                            }
+
+                            @Override
+                            public void onGenerateReport(DeviceModel device) {
+                                openDeviceReport(device);
+                            }
+                        }
+                );
+
+        recyclerTargets.setLayoutManager(
+                new LinearLayoutManager(this)
+        );
+
+        recyclerTargets.setAdapter(
+                targetAdapter
+        );
 
         recyclerDevices.setLayoutManager(
                 new LinearLayoutManager(this)
@@ -507,6 +712,14 @@ public class MainActivity extends AppCompatActivity {
             // -------------------------------------------------
 
             if (bluetoothLeScanner != null) {
+
+                userLocationHistory.clear();
+
+                lastUserLocationRecordTime = 0;
+
+                targetLocationRecordTimes.clear();
+
+                startUserLocationTracking();
 
                 bluetoothLeScanner.startScan(scanCallback);
 
@@ -851,10 +1064,15 @@ public class MainActivity extends AppCompatActivity {
                         );
 
                         newDevice.updateRiskAssessment();
+                        recordCurrentLocationForDevice(
+                                newDevice
+                        );
 
                         deviceList.add(
                                 newDevice
                         );
+                        BleDeviceRegistry.addDevice(address, newDevice);
+                        updatePotentialTargets();
 
                         alertEngine.evaluateDevice(
                                 MainActivity.this,
@@ -902,6 +1120,9 @@ public class MainActivity extends AppCompatActivity {
                         );
 
                         existingDevice.updateRiskAssessment();
+                        recordCurrentLocationForDevice(existingDevice);
+                        BleDeviceRegistry.addDevice(address, existingDevice);
+                        updatePotentialTargets();
 
                         alertEngine.evaluateDevice(
                                 MainActivity.this,
@@ -1047,6 +1268,7 @@ public class MainActivity extends AppCompatActivity {
 
             device.updateRiskAssessment();
 
+
             alertEngine.evaluateDevice(
                     MainActivity.this,
                     device
@@ -1054,6 +1276,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+        updatePotentialTargets();
 
         if (presenceMonitoring) {
 
@@ -1081,5 +1304,241 @@ public class MainActivity extends AppCompatActivity {
 
         presenceHandler.removeCallbacksAndMessages(null);
     }
+    private void updatePotentialTargets() {
 
+        if (potentialTargetList == null) {
+            return;
+        }
+
+        potentialTargetList.clear();
+
+        for (DeviceModel device : deviceList) {
+
+            // Make sure the latest risk assessment is used
+            device.updateRiskAssessment();
+
+            String riskLevel = device.getRiskLevel();
+
+            // Potential targets = HIGH or CRITICAL risk
+            if (RiskEngine.HIGH.equals(riskLevel)
+                    || RiskEngine.CRITICAL.equals(riskLevel)) {
+
+                potentialTargetList.add(device);
+            }
+        }
+
+        if (targetAdapter != null) {
+            targetAdapter.notifyDataSetChanged();
+        }
+
+        if (tvNoTargets != null) {
+
+            if (potentialTargetList.isEmpty()) {
+                tvNoTargets.setVisibility(View.VISIBLE);
+                tvNoTargets.setText(
+                        "No potential targets detected"
+                );
+            } else {
+                tvNoTargets.setVisibility(View.GONE);
+            }
+        }
+    }
+    private void startUserLocationTracking() {
+
+        if (locationTrackingStarted) {
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+                &&
+                ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    PERMISSION_REQUEST_CODE
+            );
+
+            return;
+        }
+
+        LocationRequest locationRequest =
+                new LocationRequest.Builder(
+                        Priority.PRIORITY_HIGH_ACCURACY,
+                        2000
+                )
+                        .setMinUpdateIntervalMillis(1000)
+                        .build();
+
+        locationCallback = new LocationCallback() {
+
+            @Override
+            public void onLocationResult(
+                    @NonNull LocationResult locationResult) {
+
+                for (Location location :
+                        locationResult.getLocations()) {
+
+                    latestUserLocation = location;
+
+                    recordUserLocation(location);
+                }
+            }
+        };
+
+        fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+        );
+
+        locationTrackingStarted = true;
+    }
+    private void recordUserLocation(Location location) {
+
+        if (location == null) {
+            return;
+        }
+
+        long timestamp =
+                System.currentTimeMillis();
+
+        if (timestamp - lastUserLocationRecordTime
+                < USER_LOCATION_RECORD_INTERVAL_MS) {
+            return;
+        }
+
+        lastUserLocationRecordTime =
+                timestamp;
+
+        UserLocationPoint point =
+                new UserLocationPoint(
+                        timestamp,
+                        location.getLatitude(),
+                        location.getLongitude()
+                );
+
+        userLocationHistory.add(point);
+
+        if (userLocationHistory.size()
+                > MAX_USER_LOCATION_HISTORY) {
+
+            userLocationHistory.remove(0);
+        }
+    }
+    private void recordCurrentLocationForDevice(
+            DeviceModel device
+    ) {
+
+        if (device == null) {
+            return;
+        }
+
+        if (latestUserLocation == null) {
+            return;
+        }
+
+        String deviceId =
+                device.getMacAddress();
+
+        if (deviceId == null ||
+                deviceId.isEmpty()) {
+            return;
+        }
+
+        long timestamp =
+                System.currentTimeMillis();
+
+        Long lastRecord =
+                targetLocationRecordTimes.get(deviceId);
+
+        if (lastRecord != null
+                && timestamp - lastRecord
+                < TARGET_LOCATION_RECORD_INTERVAL_MS) {
+
+            return;
+        }
+
+        targetLocationRecordTimes.put(
+                deviceId,
+                timestamp
+        );
+
+        double latitude =
+                latestUserLocation.getLatitude();
+
+        double longitude =
+                latestUserLocation.getLongitude();
+
+        device.recordTargetLocation(
+                latitude,
+                longitude,
+                timestamp
+        );
+    }
+    // =========================================================
+// OPEN ALL POTENTIAL TARGETS MAP
+// =========================================================
+
+    private void openPotentialTargetsMap() {
+
+        updatePotentialTargets();
+
+        Intent intent =
+                new Intent(
+                        MainActivity.this,
+                        PotentialTargetsMapActivity.class
+                );
+
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BleDeviceRegistry.saveToStorage(this);
+    }
+
+    private void openDeviceDetails(DeviceModel device) {
+        if (device == null) return;
+        selectedDevice = device;
+        Toast.makeText(
+                MainActivity.this,
+                "Selected: " + device.getDeviceName(),
+                Toast.LENGTH_SHORT
+        ).show();
+
+        Intent intent = new Intent(
+                MainActivity.this,
+                DeviceDetailsActivity.class
+        );
+        intent.putExtra(
+                "deviceIdentifier",
+                device.getMacAddress()
+        );
+        startActivity(intent);
+    }
+
+    private void openDeviceReport(DeviceModel device) {
+        if (device == null) return;
+        selectedDevice = device;
+        Intent intent = new Intent(
+                MainActivity.this,
+                DeviceReportActivity.class
+        );
+        intent.putExtra(
+                "deviceIdentifier",
+                device.getMacAddress()
+        );
+        startActivity(intent);
+    }
 }
