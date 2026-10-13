@@ -1,0 +1,30 @@
+{
+  "highUpload": {
+    "bytesThreshold": 200000,
+    "ratioThreshold": 2.0,
+    "minBytesForRatioCheck": 20000
+  },
+  "repeatedDestination": {
+    "connectionCountThreshold": 8
+  },
+  "periodicity": {
+    "minSamples": 3,
+    "toleranceMs": 3000,
+    "minAvgGapMs": 2000
+  },
+  "backgroundCommunication": {
+    "bytesThreshold": 100000
+  },
+  "dnsReputation": {
+    "entropyThreshold": 3.5,
+    "minLabelLength": 10,
+    "excessiveQueryThreshold": 25
+  },
+  "riskScoring": {
+    "basePointsPerWeight": 10,
+    "diminishingFactor": 0.6,
+    "criticalThreshold": 75,
+    "highThreshold": 50,
+    "mediumThreshold": 20
+  }
+}

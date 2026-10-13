@@ -1,0 +1,27 @@
+# Gradle & Build files
+.gradle/
+build/
+app/build/
+.cxx/
+app/.cxx/
+.externalNativeBuild/
+app/.externalNativeBuild/
+
+# Local Android SDK configuration
+local.properties
+
+# Android Studio & IDE
+.idea/
+*.iml
+
+# Signing keys
+*.jks
+*.keystore
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Ignore internal build APKs but allow distribution apk directory
+**/build/outputs/
+!apk/*.apk

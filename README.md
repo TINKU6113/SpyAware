@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-**SpyAware** is a modular mobile security ecosystem engineered to detect technical indicators of covert surveillance and unauthorized tracking. The project consolidates three specialized modules targeting different facets of the mobile threat landscape:
+**SpyAware** is a modular mobile security ecosystem engineered to detect technical indicators of covert surveillance and unauthorized tracking. The project consolidates four specialized modules targeting different facets of the mobile threat landscape:
 
 1. **[SpyAware Android Analyzer](SpyAware-Android-Analyzer/)**
    - Native Android application wrapper and user interface.
@@ -28,6 +28,13 @@
    - Maintains rolling RSSI history and calculates proximity and signal convergence.
    - Features a known-device whitelist, travel route geospatial mapping, and structured evidence report generation.
 
+4. **[SpyAware Network](SpyAware-Network/)**
+   - On-device local VPN (`VpnService`) network traffic monitor — rootless operation.
+   - Intercepts raw IP traffic and provides high-throughput C/C++ TUN mediation via `zdtun`.
+   - Attributes active sockets and 5-tuple flows to specific installed Android UIDs and packages.
+   - Analyzes periodic beaconing, excessive background upload volume, off-screen telemetry, and DGA/entropy anomalies.
+   - Features explainable 0–100 risk scoring and local encrypted SQLite session persistence.
+
 ---
 
 ## Direct APK Downloads
@@ -42,46 +49,50 @@ Pre-built debug application packages are available directly in their dedicated d
   *Bluetooth Low Energy tracker & proximity surveillance detector*  
   👉 [View BLE APK Release Notes & Installation Details](SpyAware-BLE/apk/README.md)
 
-> **Note**: Both APKs are signed with the Android development debug keystore for research, evaluation, and side-by-side testing.
+- 🌐 **[Download SpyAware Network APK](SpyAware-Network/apk/SpyAware-Network-debug.apk)** (~7.4 MB)  
+  *On-device rootless VPN network monitor & behavioral surveillance detector*  
+  👉 [View Network APK Release Notes & Installation Details](SpyAware-Network/apk/README.md)
+
+> **Note**: APKs are signed with the Android development debug keystore for research, evaluation, and side-by-side testing.
 
 ---
 
 ## Module Relationship & System Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                          User Environment                              │
-└────────────────────────────────────────────────────────────────────────┘
-          │                                              │
-          ▼                                              ▼
-┌───────────────────────────────────┐          ┌─────────────────────────┐
-│    SpyAware Android Analyzer      │          │      SpyAware BLE       │
-│     (com.spyaware.analyzer)       │          │ (com.example.spyaware)  │
-│  - Installed App Inventory        │          │  - 2.4 GHz BLE Scanner  │
-│  - WebView Operations Dashboard   │          │  - RSSI History Graphs  │
-│  - Critical-Risk Uninstaller      │          │  - Known Device List    │
-│  - Module Launcher Cards          │          │  - Google Maps Trails   │
-└───────────────────────────────────┘          └─────────────────────────┘
-          │ (HTTP REST / JSON)                               ▲
-          │                                                  │ (Independent
-          ▼                                                  │  RF Observer)
-┌────────────────────────────────────────────────────────────┴───────────┐
-│                        SpyAware Analyzer Backend                       │
-│                        (FastAPI Service @ :8000)                       │
-│  ├── Static Analyzer: Manifests, DEX strings, hardware APIs, native binaries │
-│  ├── Permission Engine: Explainable individual & synergistic rules     │
-│  ├── Risk Engine: Bounded peak-and-mean multi-module aggregation (0-100)│
-│  └── Dynamic Sandbox: Isolated AVD emulator execution & OS telemetry   │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   User Environment                                     │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+          │                                 │                                 │
+          ▼                                 ▼                                 ▼
+┌───────────────────────────┐ ┌───────────────────────────┐ ┌───────────────────────────┐
+│ SpyAware Android Analyzer │ │       SpyAware BLE        │ │     SpyAware Network      │
+│  (com.spyaware.analyzer)  │ │  (com.example.spyaware)   │ │  (com.spyaware.network)   │
+│ - Installed App Inventory │ │ - 2.4 GHz BLE Scanner     │ │ - Local VpnService / TUN  │
+│ - WebView Dashboard       │ │ - RSSI History Graphs     │ │ - Native zdtun Core (C++) │
+│ - Critical-Risk Removal   │ │ - Known Device Whitelist  │ │ - App Traffic Attribution │
+│ - Module Launcher Cards   │ │ - Google Maps Trails      │ │ - Behavioral Heuristics   │
+└───────────────────────────┘ └───────────────────────────┘ └───────────────────────────┘
+          │ (HTTP REST / JSON)              ▲                                 │
+          │                                 │ (Independent                    │ (On-Device
+          ▼                                 │  RF Observer)                   │  Traffic DB)
+┌───────────────────────────────────────────┴─────────────────────────────────┴─────────┐
+│                               SpyAware Analyzer Backend                               │
+│                               (FastAPI Service @ :8000)                               │
+│  ├── Static Analyzer: Manifests, DEX strings, hardware APIs, native binaries          │
+│  ├── Permission Engine: Explainable individual & synergistic rules                    │
+│  ├── Risk Engine: Bounded peak-and-mean multi-module aggregation (0-100)              │
+│  └── Dynamic Sandbox: Isolated AVD emulator execution & OS telemetry                  │
+└───────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Current Integration Status
 - **Implemented Integration**:
   - The **SpyAware Android Analyzer** connects directly to the **SpyAware Analyzer** backend via HTTP REST endpoints (`/api/health`, `/api/analyze`, `/api/analysis/{id}`).
-  - The Android Analyzer includes module integration and launcher capabilities allowing users to launch the companion **SpyAware BLE** application when installed on the device.
+  - The Android Analyzer includes module integration and launcher capabilities allowing users to install, verify, and launch companion modules (**SpyAware BLE** and **SpyAware Network**).
 - **Independent Execution**:
-  - **SpyAware BLE** operates as an independent Android application dedicated to physical RF surveillance detection and does not depend on a running Python backend for its scanning or mapping operations.
-  - Future milestones plan to unify BLE telemetry data into the backend's multi-module analysis reports.
+  - **SpyAware BLE** and **SpyAware Network** operate as independent native Android applications dedicated to physical RF surveillance detection and active network traffic forensics, without requiring a running Python backend for on-device detection.
+  - Future milestones plan to unify BLE and network telemetry into the backend's multi-module risk reports.
 
 ---
 
@@ -130,22 +141,39 @@ SpyAware/
 │   ├── .gitignore                        # Backend ignore rules
 │   └── README.md                         # Backend setup and API documentation
 │
-└── SpyAware-BLE/                         # Android BLE surveillance application
+├── SpyAware-BLE/                         # Android BLE surveillance application
+│   ├── app/                              # Android application source module
+│   │   ├── src/main/java/                # Java source files (scanning, radar, map)
+│   │   ├── src/test/                     # Unit test suites
+│   │   └── build.gradle.kts              # Application build script
+│   ├── apk/
+│   │   ├── README.md                     # BLE APK release notes & permissions
+│   │   └── SpyAware-BLE-debug.apk        # Debug APK binary
+│   ├── gradle/                           # Gradle wrapper distribution
+│   ├── build.gradle.kts                  # Root Gradle build script
+│   ├── settings.gradle.kts               # Module settings
+│   ├── gradlew / gradlew.bat             # Gradle wrapper scripts
+│   ├── Dockerfile                        # Containerized build definition
+│   ├── .dockerignore                     # Docker build exclusions
+│   ├── .gitignore                        # Module-specific ignore rules
+│   └── README.md                         # BLE application documentation
+│
+└── SpyAware-Network/                     # Android Network surveillance application
     ├── app/                              # Android application source module
-    │   ├── src/main/java/                # Java source files (scanning, radar, map)
-    │   ├── src/test/                     # Unit test suites
-    │   └── build.gradle.kts              # Application build script
+    │   ├── src/main/java/                # Java source files (VPN, heuristics, scoring)
+    │   ├── src/main/cpp/                 # Native C/C++ engine (zdtun TUN proxy)
+    │   ├── src/main/assets/              # Behavioral detection configuration
+    │   └── build.gradle                  # Application build script
     ├── apk/
-    │   ├── README.md                     # BLE APK release notes & permissions
-    │   └── SpyAware-BLE-debug.apk        # Debug APK binary
+    │   ├── README.md                     # Network APK release notes & permissions
+    │   └── SpyAware-Network-debug.apk    # Debug APK binary
     ├── gradle/                           # Gradle wrapper distribution
-    ├── build.gradle.kts                  # Root Gradle build script
-    ├── settings.gradle.kts               # Module settings
+    ├── build.gradle                      # Root Gradle build script
+    ├── settings.gradle                   # Module settings
+    ├── gradle.properties                 # Build & JVM configuration
     ├── gradlew / gradlew.bat             # Gradle wrapper scripts
-    ├── Dockerfile                        # Containerized build definition
-    ├── .dockerignore                     # Docker build exclusions
     ├── .gitignore                        # Module-specific ignore rules
-    └── README.md                         # BLE application documentation
+    └── README.md                         # Network application documentation
 ```
 
 ---

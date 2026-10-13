@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SpyAwareNetwork</string>
+    <string name="status_stage1">Stage 1: Project shell OK. No VPN, no capture, no BLE yet.</string>
+</resources>
